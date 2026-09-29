@@ -1,6 +1,7 @@
 const { ERROR_MESSAGE: GENERIC_ERROR_MESSAGE } = require('@forge/forge-ws-common/constants');
 const ApiError = require('@forge/forge-ws-common/errors/api.error');
 
+const { ERROR_CODE, ERROR_MESSAGE } = require('./constants');
 const { mapTrainingSessionTOToTrainingSessionVO } = require('./mappers/training-session.mapper');
 const {
   mapTrainingSessionVOToUpdateTrainingSessionTO,
@@ -44,6 +45,23 @@ class TrainingSessionService {
     // Completion is idempotent: a repeated call keeps the first completedAt
     if (existingTrainingSessionVO.completedAt !== null) {
       return existingTrainingSessionVO;
+    }
+
+    const trainingSessionTOs = await this.repository.trainingSession.findTrainingSessionsByUserId({
+      tenantId: completeTrainingSessionParamsVO.tenantId,
+      userId: completeTrainingSessionParamsVO.userId,
+    });
+
+    // Sessions are completed in order: only the first one by order with no completedAt is open
+    const openTrainingSessionTO = trainingSessionTOs.find(
+      (trainingSessionTO) => trainingSessionTO.completedAt === null
+    );
+
+    if (openTrainingSessionTO?.id !== existingTrainingSessionVO.id) {
+      throw ApiError.BadRequest({
+        message: ERROR_MESSAGE.TRAINING_SESSION_LOCKED,
+        code: ERROR_CODE.TRAINING_SESSION_LOCKED,
+      });
     }
 
     const updateTrainingSessionTO = mapTrainingSessionVOToUpdateTrainingSessionTO({

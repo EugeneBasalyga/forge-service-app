@@ -4,7 +4,7 @@ module.exports = {
     operationId: 'trainingSession.completeTrainingSession',
     summary: 'Complete training session',
     description:
-      'Sets completedAt of the current user training session. Idempotent: an already completed session is returned unchanged.',
+      'Sets completedAt of the current user training session. Sessions are completed in order: only the first session by order with no completedAt can be completed. Idempotent: an already completed session is returned unchanged.',
     security: [
       {
         bearerAuth: [],
@@ -33,7 +33,8 @@ module.exports = {
         },
       },
       400: {
-        description: 'Bad Request',
+        description:
+          'Bad Request: invalid id, or the session is locked (code trainingSessionLocked)',
         content: {
           'application/json': {
             schema: {
