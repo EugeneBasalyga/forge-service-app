@@ -1,0 +1,36 @@
+{
+  "name": "@forge/forge-service-app",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node ./src/main.js",
+    "watch": "nodemon ./src/main.js",
+    "lint": "eslint .",
+    "prepare": "husky"
+  },
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
+    "nodemon": "^2.0.22",
+    "prettier": "^3.8.0"
+  },
+  "dependencies": {
+    "@forge/forge-ws-common": "link:../forge-ws-common",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.22.1",
+    "express-bearer-token": "^3.0.0",
+    "express-validator": "^7.3.1",
+    "jsonwebtoken": "^9.0.3",
+    "validator": "^13.15.35"
+  }
+}
