@@ -1,5 +1,13 @@
 const { paths: authPaths, schemas: authSchemas } = require('../modules/auth/openapi');
 const { paths: sessionPaths, schemas: sessionSchemas } = require('../modules/session/openapi');
+const {
+  paths: trainingExercisePaths,
+  schemas: trainingExerciseSchemas,
+} = require('../modules/training-exercise/openapi');
+const {
+  paths: trainingSessionPaths,
+  schemas: trainingSessionSchemas,
+} = require('../modules/training-session/openapi');
 const { paths: userPaths, schemas: userSchemas } = require('../modules/user/openapi');
 
 const schemas = require('./schemas');
@@ -36,12 +44,16 @@ const openapi = ({ domainUrl, version }) => ({
       ...schemas,
       ...authSchemas,
       ...sessionSchemas,
+      ...trainingExerciseSchemas,
+      ...trainingSessionSchemas,
       ...userSchemas,
     },
   },
   paths: {
     ...authPaths,
     ...sessionPaths,
+    ...trainingSessionPaths,
+    ...trainingExercisePaths,
     ...userPaths,
   },
 });
