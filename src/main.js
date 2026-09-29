@@ -10,6 +10,10 @@ const { createDatabasePool } = require('@forge/forge-ws-common/utils/database-po
 const config = require('./config');
 const AuthController = require('./modules/auth/auth.controller');
 const AuthService = require('./modules/auth/auth.service');
+const ChatMessageController = require('./modules/chat-message/chat-message.controller');
+const ChatMessageRepository = require('./modules/chat-message/chat-message.repository');
+const ChatMessageService = require('./modules/chat-message/chat-message.service');
+const mockCoachProvider = require('./modules/chat-message/providers/mock-coach.provider');
 const SessionController = require('./modules/session/session.controller');
 const SessionRepository = require('./modules/session/session.repository');
 const SessionService = require('./modules/session/session.service');
@@ -35,6 +39,7 @@ const startServer = (app) => {
   app.use(express.json());
 
   const repository = {
+    chatMessage: new ChatMessageRepository({ dbPool }),
     session: new SessionRepository({ dbPool }),
     tenant: new TenantRepository({ dbPool }),
     trainingExercise: new TrainingExerciseRepository({ dbPool }),
@@ -44,6 +49,7 @@ const startServer = (app) => {
 
   const service = {
     auth: new AuthService(repository),
+    chatMessage: new ChatMessageService(repository, { coachProvider: mockCoachProvider }),
     session: new SessionService(repository),
     tenant: new TenantService(repository),
     trainingExercise: new TrainingExerciseService(repository),
@@ -70,6 +76,10 @@ const startServer = (app) => {
   );
 
   rootRouter.use(`${ROUTING.TENANT_BASE_PATH}/auth`, new AuthController(service).getRouter());
+  rootRouter.use(
+    `${ROUTING.TENANT_BASE_PATH}/chat/messages`,
+    new ChatMessageController(service).getRouter()
+  );
   rootRouter.use(
     `${ROUTING.TENANT_BASE_PATH}/sessions`,
     new SessionController(service).getRouter()

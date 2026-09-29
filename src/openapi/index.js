@@ -1,4 +1,8 @@
 const { paths: authPaths, schemas: authSchemas } = require('../modules/auth/openapi');
+const {
+  paths: chatMessagePaths,
+  schemas: chatMessageSchemas,
+} = require('../modules/chat-message/openapi');
 const { paths: sessionPaths, schemas: sessionSchemas } = require('../modules/session/openapi');
 const {
   paths: trainingExercisePaths,
@@ -43,6 +47,7 @@ const openapi = ({ domainUrl, version }) => ({
     schemas: {
       ...schemas,
       ...authSchemas,
+      ...chatMessageSchemas,
       ...sessionSchemas,
       ...trainingExerciseSchemas,
       ...trainingSessionSchemas,
@@ -51,6 +56,7 @@ const openapi = ({ domainUrl, version }) => ({
   },
   paths: {
     ...authPaths,
+    ...chatMessagePaths,
     ...sessionPaths,
     ...trainingSessionPaths,
     ...trainingExercisePaths,
